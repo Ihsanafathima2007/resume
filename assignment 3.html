@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration - Workshop 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .event-info {
+            background: #ecf0f1;
+            padding: 25px;
+            margin: 20px;
+        }
+
+        .event-info h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .form-section legend {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            padding: 0 20px;
+            background: #3498db;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus,
+        input[type="file"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .radio-item, .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-submit:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: #e74c3c;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-reset:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .participants-section {
+            margin: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .participants-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .declaration {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .declaration input[type="checkbox"] {
+            width: auto;
+            margin-top: 2px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group, .checkbox-group {
+                flex-direction: column;
+            }
+            
+            .form-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎉 NextGen Web Workshop 2026</h1>
+            <p>Learn to Design and Build Responsive Website</p>
+        </header>
+
+        <section class="event-info">
+            <h2>📅 Event Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Date:</strong> March 15, 2026
+                </div>
+                <div class="info-item">
+                    <strong>Time:</strong> 9:00 AM - 5:00 PM
+                </div>
+                <div class="info-item">
+                    <strong>Venue:</strong> Vidhya sagar women's College
+                </div>
+                <div class="info-item">
+                    <strong>Organizer:</strong> NextGen Tech Club
+                </div>
+            </div>
+        </section>
+
+        <section class="form-container">
+            <form id="registrationForm">
+                <fieldset class="form-section">
+                    <legend>👤 Personal Information</legend>
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth *</label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="male" name="gender" value="Male" required>
+                                <label for="male">Male</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="female" name="gender" value="Female" required>
+                                <label for="female">Female</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="other" name="gender" value="Other" required>
+                                <label for="other">Other</label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>🎯 Event Selection</legend>
+                    <div class="form-group">
+                        <label for="event">Select Event *</label>
+                        <select id="event" name="event" required>
+                            <option value="">Choose an event...</option>
+                            <option value="HTML Masterclass">HTML Masterclass</option>
+                            <option value="CSS Advanced">CSS Advanced</option>
+                            <option value="JavaScript Essentials">JavaScript Essentials</option>
+                            <option value="Responsive Design">Responsive Design</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mode of Participation *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="online" name="mode" value="Online" required>
+                                <label for="online">Online</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="offline" name="mode" value="Offline" required>
+                                <label for="offline">Offline</label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>📄 Additional Details</legend>
+                    <div class="form-group">
+                        <label for="organization">College/Company Name</label>
+                        <input type="text" id="organization" name="organization">
+                    </div>
+                    <div class="form-group">
+                        <label for="idProof">Upload ID Proof</label>
+                        <input type="file" id="idProof" name="idProof" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                    <div class="form-group">
+                        <label for="comments">Comments / Expectations</label>
+                        <textarea id="comments" name="comments" placeholder="What do you expect from this workshop?"></textarea>
+                    </div>
+                </fieldset>
+
+                <div class="declaration">
+                    <input type="checkbox" id="declaration" name="declaration" required>
+                    <label for="declaration">
+                        I confirm that the above details are correct and agree to the terms & conditions.
+                    </label>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn-submit">✅ Register Now</button>
+                    <button type="reset" class="btn-reset">🔄 Reset Form</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="participants-section">
+            <h2>📋 Registered Participants</h2>
+            <table id="participantsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Event</th>
+                        <th>Mode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>john@example.com</td>
+                        <td>+91 9876543210</td>
+                        <td>HTML Masterclass</td>
+                        <td>Online</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            <p>📧 Contact: event@nextgentechclub.com | 📞 Help Desk: +91 12345 67890</p>
+            <p>&copy; 2026 NextGen Tech Club. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check if declaration is checked
+            if (!document.getElementById('declaration').checked) {
+                alert('Please confirm the declaration before submitting!');
+                return;
+            }
+
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                event: document.getElementById('event').value,
+                mode: document.querySelector('input[name="mode"]:checked')?.value || ''
+            };
+
+            // Add to participants table
+            const tableBody = document.querySelector('#participantsTable tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${formData.name}</td>
+                <td>${formData.email}</td>
+                <td>${formData.phone}</td>
+                <td>${formData.event}</td>
+                <td>${formData.mode}</td>
+            `;
+
+            // Show success message
+            alert(`✅ Registration successful for ${formData.name}!\n\nCheck the participants table below.`);
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Reset button confirmation
+        document.querySelector('.btn-reset').addEventListener('click', function() {
+            if (confirm('Are you sure you want to reset the form?')) {
+                document.getElementById('registrationForm').reset();
+            }
+        });
+
+        // Real-time validation for email
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email && !emailRegex.test(email)) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#ddd';
+            }
+        });
+    </script>
+</body>
+</html>
